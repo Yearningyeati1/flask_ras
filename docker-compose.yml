@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:15  # Use the official PostgreSQL image
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: restaurant_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/restaurant_db
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+
+volumes:
+  postgres-data:
